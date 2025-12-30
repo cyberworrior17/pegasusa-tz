@@ -1,18 +1,24 @@
 import os
 import sys
 
+# FORCE python kuona folder ya main.py
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(BASE_DIR)
+
 from logo import logo
 from license_gate import check_license
 from android.adb_usb import adb_usb
 from android.adb_wifi import adb_wifi
 
+
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
+
 
 def menu():
     print("""
 ==============================
- F VIRUS PEGASUSA TANZANIA 
+ F VIRUS PEGASUSA TANZANIA
 ==============================
 
 [1] Connect via ADB (USB)
@@ -21,18 +27,21 @@ def menu():
 [0] Exit
 """)
 
+
 def run_qr():
     try:
         os.system("python3 web/qr_view.py")
-    except:
+    except Exception as e:
         print("[!] Failed to start QR server")
+        print(e)
+
 
 if __name__ == "__main__":
     try:
         clear()
         logo()
 
-        # LICENSE CHECK (MUST PASS)
+        # 🔐 LICENSE CHECK (MUST PASS)
         check_license()
 
         while True:
@@ -58,3 +67,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("\n\n[!] Tool stopped by user")
         sys.exit(0)
+
+
