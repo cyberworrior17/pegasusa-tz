@@ -1,27 +1,26 @@
+
 import os
 import sys
 import importlib.util
 
-# ================= PATH FIX =================
+# ============ PATH SETUP ============
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ANDROID_DIR = os.path.join(BASE_DIR, "android")
-WEB_DIR = os.path.join(BASE_DIR, "web")
 
 sys.path.append(BASE_DIR)
-sys.path.append(ANDROID_DIR)
 
 from logo import logo
 from license_gate import check_license
 
 # ============ LOAD adb_usb.py ============
-adb_usb_path = os.path.join(ANDROID_DIR, "adb_usb.py")
-spec_usb = importlib.util.spec_from_file_location("adb_usb", adb_usb_path)
+usb_path = os.path.join(ANDROID_DIR, "adb_usb.py")
+spec_usb = importlib.util.spec_from_file_location("adb_usb", usb_path)
 adb_usb = importlib.util.module_from_spec(spec_usb)
 spec_usb.loader.exec_module(adb_usb)
 
 # ============ LOAD adb_wifi.py ============
-adb_wifi_path = os.path.join(ANDROID_DIR, "adb_wifi.py")
-spec_wifi = importlib.util.spec_from_file_location("adb_wifi", adb_wifi_path)
+wifi_path = os.path.join(ANDROID_DIR, "adb_wifi.py")
+spec_wifi = importlib.util.spec_from_file_location("adb_wifi", wifi_path)
 adb_wifi = importlib.util.module_from_spec(spec_wifi)
 spec_wifi.loader.exec_module(adb_wifi)
 
@@ -44,11 +43,7 @@ def menu():
 
 
 def run_qr():
-    try:
-        os.system("python3 web/qr_view.py")
-    except Exception as e:
-        print("[!] Failed to start QR server")
-        print(e)
+    os.system("python3 web/qr_view.py")
 
 
 if __name__ == "__main__":
@@ -82,6 +77,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("\n\n[!] Tool stopped by user")
         sys.exit(0)
+
 
 
 
