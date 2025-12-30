@@ -1,0 +1,25 @@
+from flask import Flask, render_template_string
+import qrcode
+
+app = Flask(__name__)
+
+HTML = """
+<h2>F-Virus Screen View</h2>
+<p>Allow screen sharing on your phone</p>
+<button onclick="start()">ALLOW</button>
+<script>
+async function start(){
+ await navigator.mediaDevices.getDisplayMedia({video:true});
+ document.body.innerHTML="Screen sharing started";
+}
+</script>
+"""
+
+@app.route("/")
+def home():
+    return render_template_string(HTML)
+
+if __name__ == "__main__":
+    print("[*] Open http://YOUR-IP:5000")
+    app.run(host="0.0.0.0", port=5000)
+
