@@ -1,14 +1,29 @@
 import os
 import sys
+import importlib.util
 
-# FORCE python kuona folder ya main.py
+# ================= PATH FIX =================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ANDROID_DIR = os.path.join(BASE_DIR, "android")
+WEB_DIR = os.path.join(BASE_DIR, "web")
+
 sys.path.append(BASE_DIR)
+sys.path.append(ANDROID_DIR)
 
 from logo import logo
 from license_gate import check_license
-from android.adb_usb import adb_usb
-from android.adb_wifi import adb_wifi
+
+# ============ LOAD adb_usb.py ============
+adb_usb_path = os.path.join(ANDROID_DIR, "adb_usb.py")
+spec_usb = importlib.util.spec_from_file_location("adb_usb", adb_usb_path)
+adb_usb = importlib.util.module_from_spec(spec_usb)
+spec_usb.loader.exec_module(adb_usb)
+
+# ============ LOAD adb_wifi.py ============
+adb_wifi_path = os.path.join(ANDROID_DIR, "adb_wifi.py")
+spec_wifi = importlib.util.spec_from_file_location("adb_wifi", adb_wifi_path)
+adb_wifi = importlib.util.module_from_spec(spec_wifi)
+spec_wifi.loader.exec_module(adb_wifi)
 
 
 def clear():
@@ -41,7 +56,7 @@ if __name__ == "__main__":
         clear()
         logo()
 
-        # 🔐 LICENSE CHECK (MUST PASS)
+        # 🔐 LICENSE CHECK
         check_license()
 
         while True:
@@ -49,10 +64,10 @@ if __name__ == "__main__":
             choice = input("Select option: ").strip()
 
             if choice == "1":
-                adb_usb()
+                adb_usb.adb_usb()
 
             elif choice == "2":
-                adb_wifi()
+                adb_wifi.adb_wifi()
 
             elif choice == "3":
                 run_qr()
@@ -67,6 +82,8 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("\n\n[!] Tool stopped by user")
         sys.exit(0)
+
+
 
 
 
