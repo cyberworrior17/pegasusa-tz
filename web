@@ -1,25 +1,38 @@
 from flask import Flask, render_template_string
 import qrcode
+import socket
 
 app = Flask(__name__)
 
 HTML = """
-<h2>F-Virus Screen View</h2>
-<p>Allow screen sharing on your phone</p>
-<button onclick="start()">ALLOW</button>
-<script>
-async function start(){
- await navigator.mediaDevices.getDisplayMedia({video:true});
- document.body.innerHTML="Screen sharing started";
-}
-</script>
+<h2>F-VIRUS QR SCREEN VIEW</h2>
+<p>Waiting for connection...</p>
 """
 
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip = s.getsockname()[0]
+    s.close()
+    return ip
+
 @app.route("/")
-def home():
+def index():
     return render_template_string(HTML)
 
 if __name__ == "__main__":
-    print("[*] Open http://YOUR-IP:5000")
+    ip = get_ip()
+    url = f"http://{ip}:5000"
+
+    img = qrcode.make(url)
+    img.save("qr.png")
+
+    print("\n[✓] QR CODE GENERATED: qr.png")
+    print("[*] Victim open this link:")
+    print(url)
+    print("[*] Press CTRL+C to stop\n")
+
     app.run(host="0.0.0.0", port=5000)
+
+
 
